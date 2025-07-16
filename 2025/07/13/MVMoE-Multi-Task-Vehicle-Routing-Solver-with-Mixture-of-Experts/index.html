@@ -7,7 +7,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/img/butterfly-icon.png">
 <meta property="article:published_time" content="2025-07-12T17:28:23.000Z">
-<meta property="article:modified_time" content="2025-07-16T17:16:37.343Z">
+<meta property="article:modified_time" content="2025-07-16T17:18:16.412Z">
 <meta property="article:author" content="YunFun">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/img/butterfly-icon.png"><script type="application/ld+json">{
@@ -17,7 +17,7 @@
   "url": "http://example.com/2025/07/13/MVMoE-Multi-Task-Vehicle-Routing-Solver-with-Mixture-of-Experts/",
   "image": "http://example.com/img/butterfly-icon.png",
   "datePublished": "2025-07-12T17:28:23.000Z",
-  "dateModified": "2025-07-16T17:16:37.343Z",
+  "dateModified": "2025-07-16T17:18:16.412Z",
   "author": [
     {
       "@type": "Person",
@@ -270,7 +270,7 @@ mjx-container[display="true"] {
 mjx-container[display="true"] + br {
   display: none;
 }
-</style></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Xuyf</span></a><a class="nav-page-title" href="/"><span class="site-name">MVMoE: Multi-Task Vehicle Routing Solver with Mixture-of-Experts</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">MVMoE: Multi-Task Vehicle Routing Solver with Mixture-of-Experts</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-07-12T17:28:23.000Z" title="发表于 2025-07-13 01:28:23">2025-07-13</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-07-16T17:16:37.343Z" title="更新于 2025-07-17 01:16:37">2025-07-17</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="summary">Summary</h2>
+</style></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Xuyf</span></a><a class="nav-page-title" href="/"><span class="site-name">MVMoE: Multi-Task Vehicle Routing Solver with Mixture-of-Experts</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">MVMoE: Multi-Task Vehicle Routing Solver with Mixture-of-Experts</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-07-12T17:28:23.000Z" title="发表于 2025-07-13 01:28:23">2025-07-13</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-07-16T17:18:16.412Z" title="更新于 2025-07-17 01:18:16">2025-07-17</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="summary">Summary</h2>
 <p>写完笔记之后最后填，概述文章的内容，以后查阅笔记的时候先看这一段。注：写文章summary切记需要通过自己的思考，用自己的语言描述。忌讳直接Ctrl
 + c原文。</p>
 <h2 id="摘要">摘要</h2>
@@ -288,19 +288,23 @@ benchmark实例的few-shot设置中也得到合适的结果。3）门控机制�
 <p>### 不同约束的VRP变体 <img src="/2025/07/13/MVMoE-Multi-Task-Vehicle-Routing-Solver-with-Mixture-of-Experts/Various_Constraints.png" alt="VRP变体"> 1. <strong>开放路径约束 (Open Route -
 O)</strong>：车辆服务完客户点后<strong>无需返回仓库</strong>（<span class="math inline"><em>v</em><sub>0</sub></span>）。</p>
 <ol start="2" type="1">
-<li><p><strong>回程约束 (Backhaul -
-B)</strong>：允许linehauls与backhauls<strong>无优先级混合访问</strong>。<br>
-&gt; <strong>正需求 (<span class="math inline"><em>δ</em><sub><em>i</em></sub> &gt; 0</span>)</strong>：linehauls（卸货）。<br>
-<strong>负需求 (<span class="math inline"><em>δ</em><sub><em>i</em></sub> &lt; 0</span>)</strong>：backhauls（装货）。</p></li>
+<li><strong>回程约束 (Backhaul -
+B)</strong>：允许linehauls与backhauls<strong>无优先级混合访问</strong>。<br></li>
+</ol>
+<blockquote>
+<p><strong>正需求 (<span class="math inline"><em>δ</em><sub><em>i</em></sub> &gt; 0</span>)</strong>：linehauls（卸货）。<br>
+<strong>负需求 (<span class="math inline"><em>δ</em><sub><em>i</em></sub> &lt; 0</span>)</strong>：backhauls（装货）。</p>
+</blockquote>
+<ol start="3" type="1">
 <li><p><strong>时长限制 (Duration Limit -
 L)</strong>：单条路径总长度（成本）<strong>不得超过预设阈值</strong>。</p></li>
-<li><p><strong>时间窗约束 (Time Window - TW)</strong>：节点<span class="math inline"><em>v</em><sub><em>i</em></sub></span>必须在<span class="math inline">[<em>e</em><sub><em>i</em></sub>, <em>l</em><sub><em>i</em></sub>]</span>内开始服务。
-&gt; 早到需等待至<span class="math inline"><em>e</em><sub><em>i</em></sub></span>。<br>
-所有车辆必须在<span class="math inline"><em>l</em><sub>0</sub></span>前返回仓库。</p></li>
+<li><p><strong>时间窗约束 (Time Window - TW)</strong>：节点<span class="math inline"><em>v</em><sub><em>i</em></sub></span>必须在<span class="math inline">[<em>e</em><sub><em>i</em></sub>, <em>l</em><sub><em>i</em></sub>]</span>内开始服务。</p></li>
 </ol>
-<ul>
-<li><strong>开放路径耦合效应</strong>：当与(O)组合时，<strong>免除仓库返回时间约束</strong>。</li>
-</ul>
+<blockquote>
+<p>早到需等待至<span class="math inline"><em>e</em><sub><em>i</em></sub></span>。<br>
+所有车辆必须在<span class="math inline"><em>l</em><sub>0</sub></span>前返回仓库。 -
+<strong>开放路径耦合效应</strong>：当与(O)组合时，<strong>免除仓库返回时间约束</strong>。</p>
+</blockquote>
 <blockquote>
 <p><strong>约束组合特性</strong>：多约束组合存在非线性交互（如O+TW），非简单叠加。5种基础约束可组合成16种VRP变体（详见表3）。</p>
 </blockquote>
@@ -316,8 +320,10 @@ L)</strong>：单条路径总长度（成本）<strong>不得超过预设阈值<
 哪些又是weak的conclusions（即作者并没有通过实验提供evidence，只在discussion中提到；或实验的数据并没有给出充分的evidence）?</p>
 <h2 id="笔记">笔记</h2>
 <ul>
-<li>跨规模泛化<br>
-&gt; Fu, Z.-H., Qiu, K.-B., and Zha, H. Generalize a small pretrained
+<li>跨规模泛化</li>
+</ul>
+<blockquote>
+<p>Fu, Z.-H., Qiu, K.-B., and Zha, H. Generalize a small pretrained
 model to arbitrarily large tsp instances. In AAAI, volume 35,
 pp. 7474–7482, 2021.<br>
 Hou, Q., Yang, J., Su, Y., Wang, X., and Deng, Y. Generalize learned
@@ -329,27 +335,30 @@ Luo, F., Lin, X., Liu, F., Zhang, Q., and Wang, Z. Neural combinatorial
 optimization with heavy decoder: Toward large scale generalization. In
 NeurIPS, 2023.<br> Drakulic, D., Michel, S., Mai, F., Sors, A., and
 Andreoli, J.M. BQ-NCO: Bisimulation quotienting for generalizable neural
-combinatorial optimization. In NeurIPS, 2023.<br></li>
-<li>跨分布泛化 &gt;Zhang, Z., Zhang, Z., Wang, X., and Zhu, W. Learning
-to solve travelling salesman problem with hardness-adaptive curriculum.
-In AAAI, 2022.<br> Geisler, S., Sommer, J., Schuchardt, J., Bojchevski,
-A., and Günnemann, S. Generalization of neural combinatorial solvers
-through the lens of adversarial robustness. In ICLR, 2022.<br> Bi, J.,
-Ma, Y., Wang, J., Cao, Z., Chen, J., Sun, Y., and Chee, Y. M. Learning
-generalizable models for vehicle routing problems via knowledge
-distillation. In NeurIPS, 2022.<br> Jiang, Y., Cao, Z., Wu, Y., Song,
-W., and Zhang, J. Ensemble-based deep reinforcement learning for vehicle
-routing problems under distribution shift. In NeurIPS, 2023.</li>
-<li>跨VRP变体泛化 &gt;Wang, C. and Yu, T. Efficient training of
-multi-task neural solver with multi-armed bandits. arXiv preprint
-arXiv:2305.06361, 2023.<br>
+combinatorial optimization. In NeurIPS, 2023.<br> * 跨分布泛化</p>
+</blockquote>
+<blockquote>
+<p>Zhang, Z., Zhang, Z., Wang, X., and Zhu, W. Learning to solve
+travelling salesman problem with hardness-adaptive curriculum. In AAAI,
+2022.<br> Geisler, S., Sommer, J., Schuchardt, J., Bojchevski, A., and
+Günnemann, S. Generalization of neural combinatorial solvers through the
+lens of adversarial robustness. In ICLR, 2022.<br> Bi, J., Ma, Y., Wang,
+J., Cao, Z., Chen, J., Sun, Y., and Chee, Y. M. Learning generalizable
+models for vehicle routing problems via knowledge distillation. In
+NeurIPS, 2022.<br> Jiang, Y., Cao, Z., Wu, Y., Song, W., and Zhang, J.
+Ensemble-based deep reinforcement learning for vehicle routing problems
+under distribution shift. In NeurIPS, 2023. * 跨VRP变体泛化</p>
+</blockquote>
+<blockquote>
+<p>Wang, C. and Yu, T. Efficient training of multi-task neural solver
+with multi-armed bandits. arXiv preprint arXiv:2305.06361, 2023.<br>
 Liu, F., Lin, X., Zhang, Q., Tong, X., and Yuan, M. Multi-task learning
 for routing problem with cross-problem zero-shot generalization. arXiv
 preprint arXiv:2402.16891, 2024.<br>
 Lin, Z., Wu, Y., Zhou, B., Cao, Z., Song, W., Zhang, Y., and
 Senthilnath, J. Cross-problem learning for solving vehicle routing
-problems. In IJCAI, 2024.</li>
-</ul>
+problems. In IJCAI, 2024.</p>
+</blockquote>
 <h3 id="cvrp容量约束车辆路径问题">CVRP（容量约束车辆路径问题）</h3>
 <ul>
 <li><p><strong>图结构</strong><br>
