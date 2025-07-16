@@ -22,7 +22,7 @@ mathjax: true
 2. **回程约束 (Backhaul - B)**：允许linehauls与backhauls**无优先级混合访问**。<br>
 
 > **正需求 ($\delta_i>0$)**：linehauls（卸货）。<br>
-  **负需求 ($\delta_i<0$)**：backhauls（装货）。
+> **负需求 ($\delta_i<0$)**：backhauls（装货）。
 
 3. **时长限制 (Duration Limit - L)**：单条路径总长度（成本）**不得超过预设阈值**。
 
