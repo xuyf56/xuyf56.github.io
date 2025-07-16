@@ -12,22 +12,22 @@ mathjax: true
 - 本文提出使用**混合专家系统**的多任务车辆路由问题求解器（Multi-task Vehicle Routing Solver with Mixture-of-Experts, MVMoE）。旨在不增加计算量的同时提升模型性能。
 - 在MVMoE中进一步加入**分层门控机制**，控制模型性能和计算复杂度之间的权衡。
 - 实验上，1）模型在10个训练中未见过的VRP变体中展现出zero-shot泛化能力；2）在real-world benchmark实例的few-shot设置中也得到合适的结果。3）门控机制在面对分布外数据时也展现出一定的优越性。
-- Github：[https://github.com/RoyalSkye/Routing-MVMoE.](https://github.com/RoyalSkye/Routing-MVMoE)
+- Github：https://github.com/RoyalSkye/Routing-MVMoE.
 
 ## 问题描述
- ### 不同约束的VRP变体
+### 不同约束的VRP变体
 ![VRP变体](./MVMoE-Multi-Task-Vehicle-Routing-Solver-with-Mixture-of-Experts/Various_Constraints.png)
-1. **开放路径约束 (Open Route - O)**：车辆服务完客户点后**无需返回仓库**（$v_0$）。
+1. **开放路径约束 (Open Route - O)**：车辆服务完客户点后**无需返回仓库**（\(v_0\)）。
 
 2. **回程约束 (Backhaul - B)**：允许linehauls与backhauls**无优先级混合访问**。<br>
-> **正需求 ($\delta_i>0$)**：linehauls（卸货）。  
-> **负需求 ($\delta_i<0$)**：backhauls（装货）。
+> **正需求 (\(\delta_i>0\))**：linehauls（卸货）。<br>
+  **负需求 (\(\delta_i<0\))**：backhauls（装货）。
 
 3. **时长限制 (Duration Limit - L)**：单条路径总长度（成本）**不得超过预设阈值**。
 
-4. **时间窗约束 (Time Window - TW)**：节点$v_i$必须在$[e_i, l_i]$内开始服务。
-> 早到需等待至$e_i$。  
-> 所有车辆必须在$l_0$前返回仓库。
+4. **时间窗约束 (Time Window - TW)**：节点\(v_i\)必须在\([e_i, l_i]\)内开始服务。
+> 早到需等待至\(e_i\)。  
+  所有车辆必须在\(l_0\)前返回仓库。
 - **开放路径耦合效应**：当与(O)组合时，**免除仓库返回时间约束**。
 
 > **约束组合特性**：多约束组合存在非线性交互（如O+TW），非简单叠加。5种基础约束可组合成16种VRP变体（详见表3）。
@@ -49,13 +49,13 @@ Hou, Q., Yang, J., Su, Y., Wang, X., and Deng, Y. Generalize learned heuristics 
 Son, J., Kim, M., Kim, H., and Park, J. Meta-SAGE: Scale meta-learning scheduled adaptation with guided exploration for mitigating scale shift on combinatorial optimization. In ICML, 2023.<br>
 Luo, F., Lin, X., Liu, F., Zhang, Q., and Wang, Z. Neural combinatorial optimization with heavy decoder: Toward large scale generalization. In NeurIPS, 2023.<br>
 Drakulic, D., Michel, S., Mai, F., Sors, A., and Andreoli, J.M. BQ-NCO: Bisimulation quotienting for generalizable neural combinatorial optimization. In NeurIPS, 2023.<br>
-* 跨分布泛化  
-> Zhang, Z., Zhang, Z., Wang, X., and Zhu, W. Learning to solve travelling salesman problem with hardness-adaptive curriculum. In AAAI, 2022.<br>
+* 跨分布泛化
+>Zhang, Z., Zhang, Z., Wang, X., and Zhu, W. Learning to solve travelling salesman problem with hardness-adaptive curriculum. In AAAI, 2022.<br>
 Geisler, S., Sommer, J., Schuchardt, J., Bojchevski, A., and Günnemann, S. Generalization of neural combinatorial solvers through the lens of adversarial robustness. In ICLR, 2022.<br>
 Bi, J., Ma, Y., Wang, J., Cao, Z., Chen, J., Sun, Y., and Chee, Y. M. Learning generalizable models for vehicle routing problems via knowledge distillation. In NeurIPS, 2022.<br>
 Jiang, Y., Cao, Z., Wu, Y., Song, W., and Zhang, J. Ensemble-based deep reinforcement learning for vehicle routing problems under distribution shift. In NeurIPS, 2023.
-* 跨VRP变体泛化  
-> Wang, C. and Yu, T. Efficient training of multi-task neural solver with multi-armed bandits. arXiv preprint arXiv:2305.06361, 2023.  
+* 跨VRP变体泛化
+>Wang, C. and Yu, T. Efficient training of multi-task neural solver with multi-armed bandits. arXiv preprint arXiv:2305.06361, 2023.  
 Liu, F., Lin, X., Zhang, Q., Tong, X., and Yuan, M. Multi-task learning for routing problem with cross-problem zero-shot generalization. arXiv preprint arXiv:2402.16891, 2024.  
 Lin, Z., Wu, Y., Zhou, B., Cao, Z., Song, W., Zhang, Y., and Senthilnath, J. Cross-problem learning for solving vehicle routing problems. In IJCAI, 2024.
 
