@@ -14,20 +14,20 @@ mathjax: true
 - 实验上，1）模型在10个训练中未见过的VRP变体中展现出zero-shot泛化能力；2）在real-world benchmark实例的few-shot设置中也得到合适的结果。3）门控机制在面对分布外数据时也展现出一定的优越性。
 - Github：https://github.com/RoyalSkye/Routing-MVMoE.
 
-## 问题描述  
-### 不同约束的VRP变体
+## 问题描述
+ ### 不同约束的VRP变体
 ![VRP变体](./MVMoE-Multi-Task-Vehicle-Routing-Solver-with-Mixture-of-Experts/Various_Constraints.png)
-1. **开放路径约束 (Open Route - O)**：车辆服务完客户点后**无需返回仓库**（\(v_0\)）。
+1. **开放路径约束 (Open Route - O)**：车辆服务完客户点后**无需返回仓库**（$v_0$）。
 
 2. **回程约束 (Backhaul - B)**：允许linehauls与backhauls**无优先级混合访问**。<br>
-> **正需求 (\(\delta_i>0\))**：linehauls（卸货）。<br>
-  **负需求 (\(\delta_i<0\))**：backhauls（装货）。
+> **正需求 ($\delta_i>0$)**：linehauls（卸货）。<br>
+  **负需求 ($\delta_i<0$)**：backhauls（装货）。
 
 3. **时长限制 (Duration Limit - L)**：单条路径总长度（成本）**不得超过预设阈值**。
 
-4. **时间窗约束 (Time Window - TW)**：节点\(v_i\)必须在\([e_i, l_i]\)内开始服务。
-> 早到需等待至\(e_i\)。  
-  所有车辆必须在\(l_0\)前返回仓库。
+4. **时间窗约束 (Time Window - TW)**：节点$v_i$必须在$[e_i, l_i]$内开始服务。
+> 早到需等待至$e_i$。  
+  所有车辆必须在$l_0$前返回仓库。
 - **开放路径耦合效应**：当与(O)组合时，**免除仓库返回时间约束**。
 
 > **约束组合特性**：多约束组合存在非线性交互（如O+TW），非简单叠加。5种基础约束可组合成16种VRP变体（详见表3）。
