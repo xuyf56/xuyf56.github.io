@@ -14,7 +14,7 @@ mathjax: true
 - 实验上，1）模型在10个训练中未见过的VRP变体中展现出zero-shot泛化能力；2）在real-world benchmark实例的few-shot设置中也得到合适的结果。3）门控机制在面对分布外数据时也展现出一定的优越性。
 - Github：https://github.com/RoyalSkye/Routing-MVMoE.
 
-## 问题描述
+## 问题描述  
 ### 不同约束的VRP变体
 ![VRP变体](./MVMoE-Multi-Task-Vehicle-Routing-Solver-with-Mixture-of-Experts/Various_Constraints.png)
 1. **开放路径约束 (Open Route - O)**：车辆服务完客户点后**无需返回仓库**（\(v_0\)）。
