@@ -14,10 +14,15 @@ mathjax: true
 - 实验上，1）模型在10个训练中未见过的VRP变体中展现出zero-shot泛化能力；2）在real-world benchmark实例的few-shot设置中也得到合适的结果。3）门控机制在面对分布外数据时也展现出一定的优越性。
 - Github：[https://github.com/RoyalSkye/Routing-MVMoE.](https://github.com/RoyalSkye/Routing-MVMoE)
 
-## 问题描述
+## 研究问题
 
 #### 不同约束的VRP变体
-<div align=center><img src="./MVMoE-Multi-Task-Vehicle-Routing-Solver-with-Mixture-of-Experts/Various_Constraints.png" alt="VRP变体" width="500"></div>
+<div align=center>
+<figure>
+<img src="./MVMoE-Multi-Task-Vehicle-Routing-Solver-with-Mixture-of-Experts/Various_Constraints.png" alt="VRP变体" width="500">
+<figcaption>图1. 不同约束的子路径示例。</figcaption>
+</figure>
+</div>
 
 1. **开放路径约束 (Open Route - O)**：车辆服务完客户点后**无需返回仓库**（$v_0$）。
 
@@ -33,12 +38,38 @@ mathjax: true
 - 早到需等待至$e_i$。  
 - 所有车辆必须在$l_0$前返回仓库。
 
+5. **容量限制(Capacity Constraint - C)**：即CVRP。
+
 > **开放路径耦合效应**：当与(O)组合时，**免除仓库返回时间约束**。  
   **约束组合特性**：多约束组合存在非线性交互（如O+TW），非简单叠加。5种基础约束可组合成16种VRP变体。
 
 
 ## 方法
 <div align=center><img src="./MVMoE-Multi-Task-Vehicle-Routing-Solver-with-Mixture-of-Experts/Model_Structrue.png" alt="VRP变体" width="1000"></div>
+
+#### 编码器 (Encoder)
+- **输入**：  
+  - 每个节点 $v_i$ 的**静态特征** $\mathcal{S}_{i} = \{ y_i, \delta_i, e_i, l_i \}$  
+    - $y_i$：坐标（空间位置）  
+    - $\delta_i$：需求（货物量）  
+    - $e_i$：时间窗开始时间  
+    - $l_i$：时间窗结束时间  
+- **输出**：  
+  - $d$ 维**节点嵌入向量** $h_i$（捕获节点特征的高维表示）
+
+#### 解码器 (Decoder) - 第 $t$ 步
+- **输入**：  
+  1. **节点嵌入**：编码器输出的所有 $h_i$  
+  2. **上下文表示**：  
+     - 上一个被选节点的嵌入 $h_{\text{last}}$  
+     - **动态特征** $\mathcal{D}_{t} = \{ c_t, t_t, l_t, o_t \}$  
+        - $c_t$：车辆剩余容量  
+        - $t_t$：当前时间  
+        - $l_t$：当前部分路径长度  
+        - $o_t$：开放路径指示器（0/1 表示是否需要返回仓库）
+- **输出**：  
+  - **节点概率分布**：所有有效节点的选择概率向量  
+  - **动作**：根据概率分布选择下一个节点，添加到当前部分解中
 
 ## Evaluation
 作者如何评估自己的方法？实验的setup是什么样的？感兴趣实验数据和结果有哪些？有没有问题或者可以借鉴的地方？
@@ -74,17 +105,17 @@ Lin, Z., Wu, Y., Zhou, B., Cao, Z., Song, W., Zhang, Y., and Senthilnath, J. Cro
   - $ V = \{v_0, v_1, \dots, v_n\} $：节点集合  
     - $ v_0 $：仓库（depot）  
     - $ \{v_i\}_{i=1}^n $：顾客节点（共 $ n $ 个）  
-  - $ E $：边集合，包含任意两节点 $ v_i, v_j $（ $ i \neq j $ ）之间的边 $ e(v_i, v_j) $。  
+  - $ E $：边集合，包含任意两节点 $ v_i, v_j $（ $ i ≠ j $ ）之间的边 $ e(v_i, v_j) $。  
 
 - **容量约束**  
-  每个顾客节点 $ v_i $ 有需求 $ d_i \geq 0 $，每辆车的最大容量为 $ Q $。  
+  每个顾客节点 $ v_i $ 有需求 $ d_i ≥ 0 $，每辆车的最大容量为 $ Q $。  
 
 - **路径结构**  
   解（即路径方案）$ T $ 由多个子路径（sub-tours）组成：  
   - 每个子路径表示一辆车从仓库 $ v_0 $ 出发，访问若干顾客节点后返回 $ v_0 $。  
   - 需满足：  
     1. **唯一性**：每个顾客节点被恰好访问一次。  
-    2. **容量限制**：每个子路径中所有顾客节点的总需求 $ \sum d_i \leq Q $。  
+    2. **容量限制**：每个子路径中所有顾客节点的总需求 $ \sum d_i ≤ Q $。  
 
 - **成本函数**  
   在欧几里得空间中，路径成本 $ c(T) $ 定义为所有子路径的总长度（即边的欧氏距离之和）。 
