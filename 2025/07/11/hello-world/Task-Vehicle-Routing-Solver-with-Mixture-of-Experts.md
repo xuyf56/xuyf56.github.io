@@ -39,7 +39,7 @@ mathjax: true
 
 
 ## 方法
-![模型结构](MVMoE-Multi-Task-Vehicle-Routing-Solver-with-Mixture-of-Experts.png "MVMoE模型架构图")
+![模型结构](./MVMoE-Multi-Task-Vehicle-Routing-Solver-with-Mixture-of-Experts/MVMoE-Multi-Task-Vehicle-Routing-Solver-with-Mixture-of-Experts.png "MVMoE模型架构图")
 
 ## Evaluation
 作者如何评估自己的方法？实验的setup是什么样的？感兴趣实验数据和结果有哪些？有没有问题或者可以借鉴的地方？
