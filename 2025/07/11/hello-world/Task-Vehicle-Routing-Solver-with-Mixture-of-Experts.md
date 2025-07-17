@@ -45,17 +45,22 @@ mathjax: true
 
 
 ## 方法
-<div align=center><img src="./MVMoE-Multi-Task-Vehicle-Routing-Solver-with-Mixture-of-Experts/Model_Structrue.png" alt="VRP变体" width="1000"></div>
+<div align=center>
+<figure>
+<img src="./MVMoE-Multi-Task-Vehicle-Routing-Solver-with-Mixture-of-Experts/Model_Structrue.png" alt="VRP变体" width="1000">
+<figcaption>图2. MVMoe模型架构。</figcaption>
+</figure>
+</div>
 
 #### 编码器 (Encoder)
 - **输入**：  
   - 每个节点 $v_i$ 的**静态特征** $\mathcal{S}_{i} = \{ y_i, \delta_i, e_i, l_i \}$  
-    - $y_i$：坐标（空间位置）  
-    - $\delta_i$：需求（货物量）  
+    - $y_i$：坐标 
+    - $\delta_i$：需求
     - $e_i$：时间窗开始时间  
     - $l_i$：时间窗结束时间  
 - **输出**：  
-  - $d$ 维**节点嵌入向量** $h_i$（捕获节点特征的高维表示）
+  - $d$ 维**节点嵌入向量** $h_i$
 
 #### 解码器 (Decoder) - 第 $t$ 步
 - **输入**：  
@@ -66,10 +71,18 @@ mathjax: true
         - $c_t$：车辆剩余容量  
         - $t_t$：当前时间  
         - $l_t$：当前部分路径长度  
-        - $o_t$：开放路径指示器（0/1 表示是否需要返回仓库）
+        - $o_t$：开放路径指示器（是否需要返回仓库）
 - **输出**：  
   - **节点概率分布**：所有有效节点的选择概率向量  
   - **动作**：根据概率分布选择下一个节点，添加到当前部分解中
+  
+#### 变体随机训练
+- 每个训练批次随机选择一种VRP变体
+- 当前VRP变体未使用的特征**置零填充**
+  - **静态特征示例**（CVRP）：  
+    $\mathcal{S}_{i}^{(C)} = \{y_i, \delta_i, 0, 0\}$  → 时间窗特征$(e_i,l_i)$填零
+  - **动态特征示例**（CVRP）：  
+    $\mathcal{D}_{t}^{(C)} = \{c_t, 0, l_t, 0\}$  → 当前时间$t_t$和开放路径$o_t$填零  
 
 ## Evaluation
 作者如何评估自己的方法？实验的setup是什么样的？感兴趣实验数据和结果有哪些？有没有问题或者可以借鉴的地方？
@@ -102,10 +115,10 @@ Lin, Z., Wu, Y., Zhou, B., Cao, Z., Song, W., Zhang, Y., and Senthilnath, J. Cro
 ### CVRP（容量约束车辆路径问题）  
 - **图结构**  
   设图 $ g = [V, E] $，其中  
-  - $ V = \{v_0, v_1, \dots, v_n\} $：节点集合  
+  - $V = \{v_0, v_1, \dots, v_n\}$：节点集合  
     - $ v_0 $：仓库（depot）  
-    - $ \{v_i\}_{i=1}^n $：顾客节点（共 $ n $ 个）  
-  - $ E $：边集合，包含任意两节点 $ v_i, v_j $（ $ i ≠ j $ ）之间的边 $ e(v_i, v_j) $。  
+    - $\{v_i\}_{i=1}^n$：顾客节点（共 $ n $ 个）  
+  - $ E $：边集合，包含任意两节点 $v_i, v_j $（ $ i ≠ j $ ）之间的边 $ e(v_i, v_j)$。  
 
 - **容量约束**  
   每个顾客节点 $ v_i $ 有需求 $ d_i ≥ 0 $，每辆车的最大容量为 $ Q $。  
