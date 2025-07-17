@@ -12,9 +12,10 @@ mathjax: true
 - 本文提出使用**混合专家系统**的多任务车辆路由问题求解器（Multi-task Vehicle Routing Solver with Mixture-of-Experts, MVMoE）。旨在不增加计算量的同时提升模型性能。
 - 在MVMoE中进一步加入**分层门控机制**，控制模型性能和计算复杂度之间的权衡。
 - 实验上，1）模型在10个训练中未见过的VRP变体中展现出zero-shot泛化能力；2）在real-world benchmark实例的few-shot设置中也得到合适的结果。3）门控机制在面对分布外数据时也展现出一定的优越性。
-- Github：https://github.com/RoyalSkye/Routing-MVMoE.
+- Github：[https://github.com/RoyalSkye/Routing-MVMoE.](https://github.com/RoyalSkye/Routing-MVMoE)
 
 ## 问题描述
+
 ### 不同约束的VRP变体
 ![VRP变体](./MVMoE-Multi-Task-Vehicle-Routing-Solver-with-Mixture-of-Experts/Various_Constraints.png)
 1. **开放路径约束 (Open Route - O)**：车辆服务完客户点后**无需返回仓库**（$v_0$）。

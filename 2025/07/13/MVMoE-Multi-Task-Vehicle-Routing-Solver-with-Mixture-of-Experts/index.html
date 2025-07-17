@@ -7,7 +7,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/img/butterfly-icon.png">
 <meta property="article:published_time" content="2025-07-12T17:28:23.000Z">
-<meta property="article:modified_time" content="2025-07-16T17:30:11.887Z">
+<meta property="article:modified_time" content="2025-07-17T04:51:37.776Z">
 <meta property="article:author" content="YunFun">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/img/butterfly-icon.png"><script type="application/ld+json">{
@@ -17,7 +17,7 @@
   "url": "http://example.com/2025/07/13/MVMoE-Multi-Task-Vehicle-Routing-Solver-with-Mixture-of-Experts/",
   "image": "http://example.com/img/butterfly-icon.png",
   "datePublished": "2025-07-12T17:28:23.000Z",
-  "dateModified": "2025-07-16T17:30:11.887Z",
+  "dateModified": "2025-07-17T04:51:37.776Z",
   "author": [
     {
       "@type": "Person",
@@ -270,7 +270,7 @@ mjx-container[display="true"] {
 mjx-container[display="true"] + br {
   display: none;
 }
-</style></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Xuyf</span></a><a class="nav-page-title" href="/"><span class="site-name">MVMoE: Multi-Task Vehicle Routing Solver with Mixture-of-Experts</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">MVMoE: Multi-Task Vehicle Routing Solver with Mixture-of-Experts</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-07-12T17:28:23.000Z" title="发表于 2025-07-13 01:28:23">2025-07-13</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-07-16T17:30:11.887Z" title="更新于 2025-07-17 01:30:11">2025-07-17</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="summary">Summary</h2>
+</style></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Xuyf</span></a><a class="nav-page-title" href="/"><span class="site-name">MVMoE: Multi-Task Vehicle Routing Solver with Mixture-of-Experts</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">MVMoE: Multi-Task Vehicle Routing Solver with Mixture-of-Experts</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-07-12T17:28:23.000Z" title="发表于 2025-07-13 01:28:23">2025-07-13</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-07-17T04:51:37.776Z" title="更新于 2025-07-17 12:51:37">2025-07-17</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="summary">Summary</h2>
 <p>写完笔记之后最后填，概述文章的内容，以后查阅笔记的时候先看这一段。注：写文章summary切记需要通过自己的思考，用自己的语言描述。忌讳直接Ctrl
 + c原文。</p>
 <h2 id="摘要">摘要</h2>
@@ -282,7 +282,7 @@ MVMoE）。旨在不增加计算量的同时提升模型性能。</li>
 <li>在MVMoE中进一步加入<strong>分层门控机制</strong>，控制模型性能和计算复杂度之间的权衡。</li>
 <li>实验上，1）模型在10个训练中未见过的VRP变体中展现出zero-shot泛化能力；2）在real-world
 benchmark实例的few-shot设置中也得到合适的结果。3）门控机制在面对分布外数据时也展现出一定的优越性。</li>
-<li>Github：https://github.com/RoyalSkye/Routing-MVMoE.</li>
+<li>Github：<a target="_blank" rel="noopener" href="https://github.com/RoyalSkye/Routing-MVMoE">https://github.com/RoyalSkye/Routing-MVMoE.</a></li>
 </ul>
 <h2 id="问题描述">问题描述</h2>
 <h3 id="不同约束的vrp变体">不同约束的VRP变体</h3>
