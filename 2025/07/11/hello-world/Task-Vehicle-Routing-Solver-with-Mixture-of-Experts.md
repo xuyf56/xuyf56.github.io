@@ -74,7 +74,7 @@ Lin, Z., Wu, Y., Zhou, B., Cao, Z., Song, W., Zhang, Y., and Senthilnath, J. Cro
   - $ V = \{v_0, v_1, \dots, v_n\} $：节点集合  
     - $ v_0 $：仓库（depot）  
     - $ \{v_i\}_{i=1}^n $：顾客节点（共 $ n $ 个）  
-  - $ E $：边集合，包含任意两节点 $ v_i, v_j $（$ i \neq j $）之间的边 $ e(v_i, v_j) $。  
+  - $ E $：边集合，包含任意两节点 $ v_i, v_j $（ $ i \neq j $ ）之间的边 $ e(v_i, v_j) $。  
 
 - **容量约束**  
   每个顾客节点 $ v_i $ 有需求 $ d_i \geq 0 $，每辆车的最大容量为 $ Q $。  
