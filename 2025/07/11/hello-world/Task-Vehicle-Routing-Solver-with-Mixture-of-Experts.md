@@ -15,7 +15,7 @@ mathjax: true
 - Github：https://github.com/RoyalSkye/Routing-MVMoE.
 
 ## 问题描述
- ### 不同约束的VRP变体
+### 不同约束的VRP变体
 ![VRP变体](./MVMoE-Multi-Task-Vehicle-Routing-Solver-with-Mixture-of-Experts/Various_Constraints.png)
 1. **开放路径约束 (Open Route - O)**：车辆服务完客户点后**无需返回仓库**（$v_0$）。
 
