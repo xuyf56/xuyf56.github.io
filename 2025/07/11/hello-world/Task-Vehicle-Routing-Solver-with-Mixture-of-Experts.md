@@ -16,8 +16,9 @@ mathjax: true
 
 ## 问题描述
 
-### 不同约束的VRP变体
-![VRP变体](./MVMoE-Multi-Task-Vehicle-Routing-Solver-with-Mixture-of-Experts/Various_Constraints.png)
+#### 不同约束的VRP变体
+<div align=center><img src="./MVMoE-Multi-Task-Vehicle-Routing-Solver-with-Mixture-of-Experts/Various_Constraints.png" alt="VRP变体" width="500"></div>
+
 1. **开放路径约束 (Open Route - O)**：车辆服务完客户点后**无需返回仓库**（$v_0$）。
 
 2. **回程约束 (Backhaul - B)**：允许linehauls与backhauls**无优先级混合访问**。<br>
@@ -30,14 +31,15 @@ mathjax: true
 4. **时间窗约束 (Time Window - TW)**：节点$v_i$必须在$[e_i, l_i]$内开始服务。
 
 > 早到需等待至$e_i$。  
-  所有车辆必须在$l_0$前返回仓库。
+> 所有车辆必须在$l_0$前返回仓库。
+
 - **开放路径耦合效应**：当与(O)组合时，**免除仓库返回时间约束**。
 
 > **约束组合特性**：多约束组合存在非线性交互（如O+TW），非简单叠加。5种基础约束可组合成16种VRP变体（详见表3）。
 
 
 ## 方法
-![模型结构](./MVMoE-Multi-Task-Vehicle-Routing-Solver-with-Mixture-of-Experts/MVMoE-Multi-Task-Vehicle-Routing-Solver-with-Mixture-of-Experts.png "MVMoE模型架构图")
+![模型结构](MVMoE-Multi-Task-Vehicle-Routing-Solver-with-Mixture-of-Experts.png "MVMoE模型架构图")
 
 ## Evaluation
 作者如何评估自己的方法？实验的setup是什么样的？感兴趣实验数据和结果有哪些？有没有问题或者可以借鉴的地方？
