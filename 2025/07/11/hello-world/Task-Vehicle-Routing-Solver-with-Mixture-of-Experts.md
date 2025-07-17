@@ -33,12 +33,12 @@ mathjax: true
 - 早到需等待至$e_i$。  
 - 所有车辆必须在$l_0$前返回仓库。
 
-> **开放路径耦合效应**：当与(O)组合时，**免除仓库返回时间约束**。
-> **约束组合特性**：多约束组合存在非线性交互（如O+TW），非简单叠加。5种基础约束可组合成16种VRP变体（详见表3）。
+> **开放路径耦合效应**：当与(O)组合时，**免除仓库返回时间约束**。  
+  **约束组合特性**：多约束组合存在非线性交互（如O+TW），非简单叠加。5种基础约束可组合成16种VRP变体。
 
 
 ## 方法
-![模型结构](./MVMoE-Multi-Task-Vehicle-Routing-Solver-with-Mixture-of-Experts/Model_Structrue.png "MVMoE模型架构图")
+<div align=center><img src="./MVMoE-Multi-Task-Vehicle-Routing-Solver-with-Mixture-of-Experts/Model_Structrue.png" alt="VRP变体" width="1000"></div>
 
 ## Evaluation
 作者如何评估自己的方法？实验的setup是什么样的？感兴趣实验数据和结果有哪些？有没有问题或者可以借鉴的地方？
@@ -54,12 +54,14 @@ Hou, Q., Yang, J., Su, Y., Wang, X., and Deng, Y. Generalize learned heuristics 
 Son, J., Kim, M., Kim, H., and Park, J. Meta-SAGE: Scale meta-learning scheduled adaptation with guided exploration for mitigating scale shift on combinatorial optimization. In ICML, 2023.<br>
 Luo, F., Lin, X., Liu, F., Zhang, Q., and Wang, Z. Neural combinatorial optimization with heavy decoder: Toward large scale generalization. In NeurIPS, 2023.<br>
 Drakulic, D., Michel, S., Mai, F., Sors, A., and Andreoli, J.M. BQ-NCO: Bisimulation quotienting for generalizable neural combinatorial optimization. In NeurIPS, 2023.<br>
+
 * 跨分布泛化
 
 > Zhang, Z., Zhang, Z., Wang, X., and Zhu, W. Learning to solve travelling salesman problem with hardness-adaptive curriculum. In AAAI, 2022.<br>
 Geisler, S., Sommer, J., Schuchardt, J., Bojchevski, A., and Günnemann, S. Generalization of neural combinatorial solvers through the lens of adversarial robustness. In ICLR, 2022.<br>
 Bi, J., Ma, Y., Wang, J., Cao, Z., Chen, J., Sun, Y., and Chee, Y. M. Learning generalizable models for vehicle routing problems via knowledge distillation. In NeurIPS, 2022.<br>
 Jiang, Y., Cao, Z., Wu, Y., Song, W., and Zhang, J. Ensemble-based deep reinforcement learning for vehicle routing problems under distribution shift. In NeurIPS, 2023.
+
 * 跨VRP变体泛化
 
 > Wang, C. and Yu, T. Efficient training of multi-task neural solver with multi-armed bandits. arXiv preprint arXiv:2305.06361, 2023.  
