@@ -48,7 +48,7 @@ mathjax: true
 <div align=center>
 <figure>
 <img src="./MVMoE-Multi-Task-Vehicle-Routing-Solver-with-Mixture-of-Experts/Model_Structrue.png" alt="VRP变体" width="1000">
-<figcaption>图2. MVMoe模型架构。</figcaption>
+<figcaption>图2. MVMoe模型架构。具体来说，在编码器中用 MoE 替换了 FFN 层，<br>并在解码器的多头注意力的最终线性层中用 MoE 进行替换。</figcaption>
 </figure>
 </div>
 
@@ -76,18 +76,99 @@ mathjax: true
   - **节点概率分布**：所有有效节点的选择概率向量  
   - **动作**：根据概率分布选择下一个节点，添加到当前部分解中
   
-#### 变体随机训练
+#### 不同变体随机训练
 - 每个训练批次随机选择一种VRP变体
 - 当前VRP变体未使用的特征**置零填充**
   - **静态特征示例**（CVRP）：  
     $\mathcal{S}_{i}^{(C)} = \{y_i, \delta_i, 0, 0\}$  → 时间窗特征$(e_i,l_i)$填零
   - **动态特征示例**（CVRP）：  
     $\mathcal{D}_{t}^{(C)} = \{c_t, 0, l_t, 0\}$  → 当前时间$t_t$和开放路径$o_t$填零  
+- **损失函数**：$\min\limits _ {\Theta} \mathcal{L}=\mathcal{L}_{a}+\alpha\mathcal{L}_{b}$
+  - $\mathcal{L}_{a}$：原始损失函数（例如REINFORCE损失）。
+  - $\mathcal{L}_{b}$：与MoEs相关的损失函数（例如用于确保负载均衡的辅助损失）
+  
+#### 门控机制
 
-## Evaluation
-作者如何评估自己的方法？实验的setup是什么样的？感兴趣实验数据和结果有哪些？有没有问题或者可以借鉴的地方？
 
-## Conclusion
+## 实验
+考虑5中约束组合的16中VRP变体。设备：NVIDIA A100-80G，AMD EPYC 7513 CPU @ 2.6GHz.
+####
+- 基线：
+  - 传统求解器：节点数$n=50/100$，搜索时间限制为$20s/40s$。
+    - HGS求解CVRP和VRPTW
+    - LKH3求解CVRP、OVRP、VRPL、VRPTW
+    - OR-Tools求解全部16种变体。
+      - 采用平行最廉价插入法(Parallel Cheapest Insertion)求初始解
+      - 使用引导式局部搜索(Guided Local Search)做局部搜索。
+
+  - 神经求解器
+    - POMO
+    - POMO-MTL (1.25M)
+- 训练：
+  - 对于神经求解器：
+    - 采用Adam优化器，学习率$1e^{-4}$，权重衰减$1e^{-6}$。最后10\%数据，学习率衰减10倍。
+    - batch size=128，epochs=5000 with 20000 trainning instances。
+  - 对于多任务求解器：
+    - 训练集数据：CVRP、OVRP、VRPB、VRPL、VRPTW、OVRPTW.
+  - 对于MVMoE：
+    - 专家数$m=4, K=\beta=2$。
+    - 辅助损失权重$\alpha=0.01$。
+    - 采用node-level input-choice gating。
+
+#### 实验结果
+<div align=center>
+<figure>
+<img src="./MVMoE-Multi-Task-Vehicle-Routing-Solver-with-Mixture-of-Experts/Result1.png" alt="VRP变体" width="1000">
+<figcaption>表1. MVMoe模型性能对比。</figcaption>
+</figure>
+</div>
+
+- POMO在每个单独问题上的表现优于多任务求解器，但平均性能（泛化能力）差。
+- MVMoE优于POMO-MTL，表明MVMoE在多任务VRP求解方面具有优势。
+
+<div align=center>
+<figure>
+<img src="./MVMoE-Multi-Task-Vehicle-Routing-Solver-with-Mixture-of-Experts/Zero-shot generalization.png" alt="VRP变体" width="1000">
+<figcaption>表2. Zero-shot 泛化表现。</figcaption>
+</figure>
+</div>
+
+- 在10个未见过的VRP变体上的表现，说明MVMoE的Zero-shot 泛化能力优于POMO-MTL。
+
+<div align=center>
+<figure>
+<img src="./MVMoE-Multi-Task-Vehicle-Routing-Solver-with-Mixture-of-Experts/Few-shot generalization.png" alt="VRP变体" width="500">
+<figcaption>图5. Few-shot 泛化表现对比。</figcaption>
+</figure>
+</div>
+
+#### 消融实验
+探索不同MoE设置对Zero-shot泛化能力的影响。epochs减少至2500，问题规模$n=50$，使用MVMoE/4E。
+<div align=center>
+<figure>
+<img src="./MVMoE-Multi-Task-Vehicle-Routing-Solver-with-Mixture-of-Experts/Ablation experiment.png" alt="VRP变体" width="1000">
+<figcaption>图6. 消融实验结果。</figcaption>
+</figure>
+</div>
+
+- MoEs位置：Encoder和Decoder处有利于zero-shot泛化。
+  - 原始特征处理层
+  - 编码器层
+  - 解码器层
+- 专家数量：先统一使用50M实例进行训练，再使8E额外训练50M实例（总100M），16E额外训练150M实例（总200M）。
+  - 专家数量8
+  - 专家数量16
+- 门控机制：
+  - 层次
+    - 节点级
+    - 实例级
+    - 问题级
+  - 算法
+    - input-choice
+    - expert-choice
+    - random gating
+
+## 结论
 作者给出了哪些结论？哪些是strong conclusions, 哪些又是weak的conclusions（即作者并没有通过实验提供evidence，只在discussion中提到；或实验的数据并没有给出充分的evidence）?
 
 ## 笔记
@@ -133,6 +214,12 @@ Lin, Z., Wu, Y., Zhou, B., Cao, Z., Song, W., Zhang, Y., and Senthilnath, J. Cro
 - **成本函数**  
   在欧几里得空间中，路径成本 $ c(T) $ 定义为所有子路径的总长度（即边的欧氏距离之和）。 
 
+### MoE（混合专家层）
+- 包含$m$个专家$\{E_1, E_2, \ldots, E_m\}$，每个专家是**线性层或FFN**，相互之间参数不共享。
+- 门控网络$G$决定输入如何分配给专家。
+> \[\text{MoE}(x) = \sum_{j=1}^{m} G(x)_j \cdot E_j(x)\\
+  G(x)_j：第 j 个专家的权重  \\
+  E_j(x)：第 j 个专家的输出\]
 
 
 ## 参考文献(后续阅读)
