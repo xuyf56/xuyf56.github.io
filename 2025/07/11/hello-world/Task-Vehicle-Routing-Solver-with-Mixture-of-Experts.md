@@ -53,14 +53,13 @@ mathjax: true
 </div>
 
 #### 编码器 (Encoder)
-- **输入**：  
-  - 每个节点 $v_i$ 的**静态特征** $\mathcal{S}_{i} = \{ y_i, \delta_i, e_i, l_i \}$  
-    - $y_i$：坐标 
-    - $\delta_i$：需求
-    - $e_i$：时间窗开始时间  
-    - $l_i$：时间窗结束时间  
-- **输出**：  
-  - $d$ 维**节点嵌入向量** $h_i$
+- **输入**：每个节点 $v_i$ 的**静态特征** $\mathcal{S}_{i} = \{ y_i, \delta_i, e_i, l_i \}$  
+  - $y_i$：坐标 
+  - $\delta_i$：需求
+  - $e_i$：时间窗开始时间  
+  - $l_i$：时间窗结束时间  
+  
+- **输出**：$d$ 维**节点嵌入向量** $h_i$
 
 #### 解码器 (Decoder) - 第 $t$ 步
 - **输入**：  
@@ -79,10 +78,8 @@ mathjax: true
 #### 不同变体随机训练
 - 每个训练批次随机选择一种VRP变体
 - 当前VRP变体未使用的特征**置零填充**
-  - **静态特征示例**（CVRP）：  
-    $\mathcal{S}_{i}^{(C)} = \{y_i, \delta_i, 0, 0\}$  → 时间窗特征$(e_i,l_i)$填零
-  - **动态特征示例**（CVRP）：  
-    $\mathcal{D}_{t}^{(C)} = \{c_t, 0, l_t, 0\}$  → 当前时间$t_t$和开放路径$o_t$填零  
+  - **静态特征示例**（CVRP）：$\mathcal{S}_{i}^{(C)} = \{y_i, \delta_i, 0, 0\}$  → 时间窗特征$(e_i,l_i)$填零
+  - **动态特征示例**（CVRP）：$\mathcal{D}_{t}^{(C)} = \{c_t, 0, l_t, 0\}$  → 当前时间$t_t$和开放路径$o_t$填零  
 - **损失函数**：$\min\limits _ {\Theta} \mathcal{L}=\mathcal{L}_{a}+\alpha\mathcal{L}_{b}$
   - $\mathcal{L}_{a}$：原始损失函数（例如REINFORCE损失）。
   - $\mathcal{L}_{b}$：与MoEs相关的损失函数（例如用于确保负载均衡的辅助损失）
@@ -92,6 +89,7 @@ mathjax: true
 
 ## 实验
 考虑5中约束组合的16中VRP变体。设备：NVIDIA A100-80G，AMD EPYC 7513 CPU @ 2.6GHz.
+
 ####
 - 基线：
   - 传统求解器：节点数$n=50/100$，搜索时间限制为$20s/40s$。
@@ -169,7 +167,12 @@ mathjax: true
     - random gating
 
 ## 结论
-作者给出了哪些结论？哪些是strong conclusions, 哪些又是weak的conclusions（即作者并没有通过实验提供evidence，只在discussion中提到；或实验的数据并没有给出充分的evidence）?
+为建立一个解决VRP问题的更通用和强大的神经网络求解器，本文提出了MVMoE(Multi-task Vehicle Routing Solver with MoEs)以及适用于MVMoE的分层门控机制。第一次尝试建立一个大型的VRP模型。MVMoE也展现出了zero-shot、few-shot的强大泛化能力。但相比于大语言模型的参数规模，MVMoE仍然还是小得多。  
+未来的研究方向：
+1. 解决大规模VRPs问题的可扩展（scalable）基于MoE模型的发展
+2. 针对不同问题的通用表征的探索
+3. 门控机制可解释性的探索
+4. 对MoEs的scaling laws的研究
 
 ## 笔记
 * 跨规模泛化  
@@ -235,3 +238,4 @@ Lin, Z., Wu, Y., Zhou, B., Cao, Z., Song, W., Zhang, Y., and Senthilnath, J. Cro
 10. Fedus, W., Zoph, B., and Shazeer, N. Switch transformers: Scaling to trillion parameter models with simple and efficient sparsity. The Journal of Machine Learning Research, 23(1):5232–5270, 2022b.
 11. Yuksel, S. E., Wilson, J. N., and Gader, P. D. Twenty years of mixture of experts. IEEE transactions on neural networks and learning systems, 23(8):1177–1193, 2012.
 12. Fedus, W., Dean, J., and Zoph, B. A review of sparse expert models in deep learning. arXiv preprint arXiv:2209.01667, 2022a.
+**13. Luo, F., Lin, X., Liu, F., Zhang, Q., and Wang, Z. Neural combinatorial optimization with heavy decoder: Toward large scale generalization. In NeurIPS, 2023.**
