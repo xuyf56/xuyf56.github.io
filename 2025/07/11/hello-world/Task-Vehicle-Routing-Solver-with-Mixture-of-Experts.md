@@ -85,7 +85,30 @@ mathjax: true
   - $\mathcal{L}_{b}$：与MoEs相关的损失函数（例如用于确保负载均衡的辅助损失）
   
 #### 门控机制
+门控网络增加了额外的计算开销，主要是1）门控网络的前向传播；2）节点到专家的分配。  
+编码器层的门控次数是固定的，取决于编码器层数。解码器上门控次数由层数和解码次数决定。本文在解码器层提出分层门控机制来权衡模型性能和计算开销。
 
+<div align=center>
+<figure>
+<img src="./MVMoE-Multi-Task-Vehicle-Routing-Solver-with-Mixture-of-Experts/node level gating.png" width="500">
+<figcaption>图3. 得分矩阵和门控算法的示例。彩色点代表被选择的节点或专家。<br>
+左边：Input-choice gating. 右边：Expert-choice gating.</figcaption>
+</figure>
+</div>
+
+- 节点级门控：门控网络参数$W_G\in \mathbf{R}^{d\times m}$，输入批次$X\in \mathbf{R}^{I\times d}$，得分矩阵$H=(X\cdot W_G)\in \mathbf{R}^{I\times m}$。
+  - Input-choice gating：每个节点基于$H$选取$TopK$个专家。不保证负载均衡，可能导致某些专家欠拟合。通常会引入辅助损失(Auxiliary Loss)。
+  - Expert-choice gating：每个专家基于$H$选取$TopK$个节点，$K=\frac{I\times \beta}{m}$。能够确保负载均衡，但可能有节点不被任一专家选中。
+  
+<div align=center>
+<figure>
+<img src="./MVMoE-Multi-Task-Vehicle-Routing-Solver-with-Mixture-of-Experts/Hierarchical Gating.png" width="500">
+<figcaption>图4. 分层门控（右边）。</figcaption>
+</figure>
+</div>
+
+- 分层门控机制：在每一解码步骤上应用MoEs十分消耗计算资源，1）解码步骤$T$随着问题规模$n$的增加而上升；2）解码过程中问题特有的可行性约束必须被满足。因此，本文仅在部分解码步骤上应用MoEs。
+  - 分层门控（右边）通过门控网络$G_1$将输入引导进稀疏层或稠密层。稀疏层中门控网络$G_2$再引导节点与专家选取。$G_1$根据问题级表征$X_1$进行选择，$G_2$根据节点级表征进行选择。
 
 ## 实验
 考虑5中约束组合的16中VRP变体。设备：NVIDIA A100-80G，AMD EPYC 7513 CPU @ 2.6GHz.
