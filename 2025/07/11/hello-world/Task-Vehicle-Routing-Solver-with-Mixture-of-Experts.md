@@ -4,8 +4,14 @@ date: 2025-07-13 01:28:23
 tags:
 mathjax: true
 ---
-## Summary
-写完笔记之后最后填，概述文章的内容，以后查阅笔记的时候先看这一段。注：写文章summary切记需要通过自己的思考，用自己的语言描述。忌讳直接Ctrl + c原文。
+<div align=center>
+<figure>
+<img src="./MVMoE-Multi-Task-Vehicle-Routing-Solver-with-Mixture-of-Experts/Title.png" alt="VRP变体" width="1000">
+</figure>
+</div>
+
+## 总结
+
 
 ## 摘要
 - 在**某个特定问题**上独立地建模和训练的神经网络求解器缺乏足够的泛化性和实用性。
