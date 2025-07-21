@@ -1,7 +1,7 @@
 ---
 title: 'MVMoE: Multi-Task Vehicle Routing Solver with Mixture-of-Experts'
 date: 2025-07-13 01:28:23
-tags:
+tags: ICML 2024
 mathjax: true
 ---
 <div align=center>
