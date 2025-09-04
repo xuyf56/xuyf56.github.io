@@ -1,0 +1,442 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Neural Combinatorial Optimization with Heavy Decoder: Toward Large Scale Generalization | Xuyf</title><meta name="author" content="YunFun"><meta name="copyright" content="YunFun"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="总结 摘要  本文提出轻编码器重解码器模型——Light Encoder and Heavy Decoder (LEHD)。 LEHD能够强有力地泛化到更大规模组合优化问题实例，能够捕捉不同规模问题可行节点之间的关系，这一特性对提升模型在更大规模问题实例中的泛化性十分有利。 另外，提出了数据高效的训练方案和灵活的解构造机制。 仅在小规模问题实例上进行训练即可在10">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Neural Combinatorial Optimization with Heavy Decoder: Toward Large Scale Generalization">
+<meta property="og:url" content="http://example.com/2025/09/02/Neural-Combinatorial-Optimization-with-Heavy-Decoder-Toward-Large-Scale-Generalization/index.html">
+<meta property="og:site_name" content="Xuyf">
+<meta property="og:description" content="总结 摘要  本文提出轻编码器重解码器模型——Light Encoder and Heavy Decoder (LEHD)。 LEHD能够强有力地泛化到更大规模组合优化问题实例，能够捕捉不同规模问题可行节点之间的关系，这一特性对提升模型在更大规模问题实例中的泛化性十分有利。 另外，提出了数据高效的训练方案和灵活的解构造机制。 仅在小规模问题实例上进行训练即可在10">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/butterfly-icon.png">
+<meta property="article:published_time" content="2025-09-02T07:32:28.000Z">
+<meta property="article:modified_time" content="2025-09-04T08:53:58.403Z">
+<meta property="article:author" content="YunFun">
+<meta property="article:tag" content="NIPS 2023">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Neural Combinatorial Optimization with Heavy Decoder: Toward Large Scale Generalization",
+  "url": "http://example.com/2025/09/02/Neural-Combinatorial-Optimization-with-Heavy-Decoder-Toward-Large-Scale-Generalization/",
+  "image": "http://example.com/img/butterfly-icon.png",
+  "datePublished": "2025-09-02T07:32:28.000Z",
+  "dateModified": "2025-09-04T08:53:58.403Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "YunFun",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2025/09/02/Neural-Combinatorial-Optimization-with-Heavy-Decoder-Toward-Large-Scale-Generalization/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Neural Combinatorial Optimization with Heavy Decoder: Toward Large Scale Generalization',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Xuyf</span></a><a class="nav-page-title" href="/"><span class="site-name">Neural Combinatorial Optimization with Heavy Decoder: Toward Large Scale Generalization</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">Neural Combinatorial Optimization with Heavy Decoder: Toward Large Scale Generalization</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-09-02T07:32:28.000Z" title="发表于 2025-09-02 15:32:28">2025-09-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-09-04T08:53:58.403Z" title="更新于 2025-09-04 16:53:58">2025-09-04</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div data-align="center">
+<figure>
+<img src="./Neural-Combinatorial-Optimization-with-Heavy-Decoder-Toward-Large-Scale-Generalization/Title.png" alt="VRP变体" width="800">
+</figure>
+</div>
+<h2 id="总结">总结</h2>
+<h2 id="摘要">摘要</h2>
+<ul>
+<li>本文提出轻编码器重解码器模型——Light Encoder and Heavy Decoder
+(LEHD)。</li>
+<li>LEHD能够强有力地泛化到更大规模组合优化问题实例，能够捕捉不同规模问题可行节点之间的关系，这一特性对提升模型在更大规模问题实例中的泛化性十分有利。</li>
+<li>另外，提出了数据高效的训练方案和灵活的解构造机制。</li>
+<li>仅在小规模问题实例上进行训练即可在1000及以下节点数的TSP和CVRP问题上接近最优解，也能很好地泛化到TSPLib和CVRPLib问题上。</li>
+<li>Github：<a target="_blank" rel="noopener" href="https://github.com/CIAM-Group/NCO_code/tree/main/single_objective/LEHD" class="uri">https://github.com/CIAM-Group/NCO_code/tree/main/single_objective/LEHD</a></li>
+</ul>
+<h2 id="研究问题">研究问题</h2>
+<ul>
+<li><strong>问题：</strong>
+以往方法在小规模问题中取得较好结果，但难以应对<strong>大规模问题</strong>。
+<ul>
+<li>由于大规模问题的NP难特性，在大规模问题实例中直接训练NCO模型并不现实：
+<ul>
+<li>基于监督学习的方法不好获取高质量解作为带标签训练数据。</li>
+<li>基于强化学习的方法面临着<strong>奖励稀疏</strong>和<strong>设备内存制约</strong>的问题。</li>
+</ul></li>
+<li>在小规模问题上训练，提升模型泛化到大规模问题的性能是一种可行思路。<br>
+</li>
+</ul></li>
+<li><strong>动机：</strong>
+当前NCO模型重编码器轻解码器（HELD）的架构可能是模型泛化性能不佳的潜在原因。
+<ul>
+<li>基于 HELD
+的模型旨在通过一个强大的编码器一次性学习所有节点的嵌入，然后通过一个轻量级的解码器利用静态节点嵌入依次构建解。</li>
+<li>这种一次性嵌入学习可能会使模型倾向于学习与问题规模相关的特征，从而在小规模实例上表现良好。</li>
+</ul></li>
+<li><strong>方法：</strong> 本文提出轻编码器重解码器Light Encoder and
+Heavy Decoder (LEHD)架构模型。
+<ul>
+<li>LEHD通过重解码器在每步中动态捕捉当前部分解和所有可行节点之间的依赖关系，解码器中的多层注意力机制会重新计算每个节点的上下文表示（重嵌入）。</li>
+<li><strong>困难：</strong>
+重解码器结构计算开销、内存占用较大，难以使用强化学习进行训练。
+<ul>
+<li>本文提出了 <strong>“学习构造部分解”</strong>
+的数据高效训练方案，以监督学习的方式训练LEHD。</li>
+<li>提出随机重构方法Random Re-Construct (RRC)在推理阶段优化解。</li>
+</ul></li>
+</ul></li>
+</ul>
+<h2 id="方法">方法</h2>
+<h4 id="模型架构">模型架构</h4>
+<div data-align="center">
+<figure>
+<img src="./Neural-Combinatorial-Optimization-with-Heavy-Decoder-Toward-Large-Scale-Generalization/Fig 1.png" width="800">
+<figcaption>
+图1. LEHD架构图，包含一个单层编码器和一个L层注意力层的解码器。
+</figcaption>
+</figure>
+</div>
+<ul>
+<li><strong>编码器：</strong> LEHD中移除了编码器中的归一化层。</li>
+<li><strong>解码器：</strong> HELD 模型的解码器仅具有静态节点嵌入矩阵
+<span class="math inline"><mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.566ex;" xmlns="http://www.w3.org/2000/svg" width="5.36ex" height="2.587ex" role="img" focusable="false" viewBox="0 -893.3 2368.9 1143.3"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="msup"><g data-mml-node="mi"><path data-c="1D43B" d="M228 637Q194 637 192 641Q191 643 191 649Q191 673 202 682Q204 683 219 683Q260 681 355 681Q389 681 418 681T463 682T483 682Q499 682 499 672Q499 670 497 658Q492 641 487 638H485Q483 638 480 638T473 638T464 637T455 637Q416 636 405 634T387 623Q384 619 355 500Q348 474 340 442T328 395L324 380Q324 378 469 378H614L615 381Q615 384 646 504Q674 619 674 627T617 637Q594 637 587 639T580 648Q580 650 582 660Q586 677 588 679T604 682Q609 682 646 681T740 680Q802 680 835 681T871 682Q888 682 888 672Q888 645 876 638H874Q872 638 869 638T862 638T853 637T844 637Q805 636 794 634T776 623Q773 618 704 340T634 58Q634 51 638 51Q646 48 692 46H723Q729 38 729 37T726 19Q722 6 716 0H701Q664 2 567 2Q533 2 504 2T458 2T437 1Q420 1 420 10Q420 15 423 24Q428 43 433 45Q437 46 448 46H454Q481 46 514 49Q520 50 522 50T528 55T534 64T540 82T547 110T558 153Q565 181 569 198Q602 330 602 331T457 332H312L279 197Q245 63 245 58Q245 51 253 49T303 46H334Q340 38 340 37T337 19Q333 6 327 0H312Q275 2 178 2Q144 2 115 2T69 2T48 1Q31 1 31 10Q31 12 34 24Q39 43 44 45Q48 46 59 46H65Q92 46 125 49Q139 52 144 61Q147 65 216 339T285 628Q285 635 228 637Z"></path></g><g data-mml-node="mo" transform="translate(973.9,363) scale(0.707)"><path data-c="28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path></g></g><g data-mml-node="mi" transform="translate(1298.9,0)"><path data-c="1D43F" d="M228 637Q194 637 192 641Q191 643 191 649Q191 673 202 682Q204 683 217 683Q271 680 344 680Q485 680 506 683H518Q524 677 524 674T522 656Q517 641 513 637H475Q406 636 394 628Q387 624 380 600T313 336Q297 271 279 198T252 88L243 52Q243 48 252 48T311 46H328Q360 46 379 47T428 54T478 72T522 106T564 161Q580 191 594 228T611 270Q616 273 628 273H641Q647 264 647 262T627 203T583 83T557 9Q555 4 553 3T537 0T494 -1Q483 -1 418 -1T294 0H116Q32 0 32 10Q32 17 34 24Q39 43 44 45Q48 46 59 46H65Q92 46 125 49Q139 52 144 61Q147 65 216 339T285 628Q285 635 228 637Z"></path></g><g data-mml-node="mo" transform="translate(1979.9,0)"><path data-c="29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path></g></g></g></svg></mjx-container></span>，在整个解码过程中它所捕获的节点之间的关系不会得到更新。LEHD
+解码器会通过 L
+层注意力层动态地重新计算起始节点、目标节点以及可用节点的嵌入信息，从而在每次解码步骤中更新节点之间的关系。这种动态学习策略使模型能够调整并优化其对起始/目标节点以及可用节点之间关系的捕捉。</li>
+</ul>
+<h4 id="训练学习构建部分解">训练：学习构建部分解</h4>
+<div data-align="center">
+<figure>
+<img src="./Neural-Combinatorial-Optimization-with-Heavy-Decoder-Toward-Large-Scale-Generalization/Fig 2.png" width="800">
+<figcaption>
+图2. 对TSP、CVRP问题生成部分解过程示例。
+<br>对于TSP问题，最优解为[1,2,3,4,5,6,7,8,9]，随机采样部分解为[6,5,4,3,2]。对于CVRP问题，最优解为[0,1,2,3,0,4,5,6，0,7,8,9,0]，随机采样部分解为[2,3,0,6,5,4,0]。对于CVRP，限制部分解必须以仓库结尾。
+</figcaption>
+</figure>
+</div>
+<p><a target="_blank" rel="noopener" href="https://openreview.net/pdf?id=a_yFkJ4-uEK" title="Shunyu Yao, Xi Lin, Zhenkun Wang, and Qingfu Zhang. Data-efficient supervised learning is powerful for neural combinatorial optimization. 2023. URL https://openreview.net/forum?id=a_yFkJ4-uEK.">Yao
+et al.</a>指出，数据增强（Data Augmentation,
+DA）可以显著减少监督学习所需要的高质量解。基于<a target="_blank" rel="noopener" href="https://proceedings.neurips.cc/paper_files/paper/2020/file/f231f2107df69eab0a3862d50018a9b2-Paper.pdf" title="Yeong-Dae Kwon, Jinho Choo, Byoungjip Kim, Iljoo Yoon, Youngjune Gwon, and Seungjai Min. Pomo: Policy optimization with multiple optima for reinforcement learning. Advances in Neural Information Processing Systems, 33:21188–21198, 2020.">多重最优性</a>和<a target="_blank" rel="noopener" href="https://proceedings.neurips.cc/paper_files/paper/2022/file/0cddb777d3441326544e21b67f41bdc8-Paper-Conference.pdf" title="Minsu Kim, Junyoung Park, and Jinkyoo Park. Sym-nco: Leveraging symmetricity for neural combinatorial optimization. arXiv preprint arXiv:2205.13209, 2022.">最优不变性</a>的操作是最常见的数据增强方法。本文基于最优不变性制定了有效的基于数据增强的监督学习方法。<br>
+根据最优不变性，最优解的部分解也是最优的。将一条完整的最优解通过随机大小、随机方向、随机起点的采样转化为大量高质量的部分解，极度扩充训练集规模。将这种训练方案称为<strong>学习构建部分解</strong>。</p>
+<h4 id="推理随机重建">推理：随机重建</h4>
+<p>构造模型存在归纳偏差，意味着模型沿着自身<strong>偏好</strong>的方向可以构造出更优的解。同样，不同的起点和终点会导致不同的解质量，因为模型从某些已充分学习的局部模式出发时可能会表现得更好。{是否表示训练没有完全收敛？}<br>
+上述问题的存在导致通过贪心搜索得到的路径可能并非最优并且包含多个次优的局部分块。因此，需要在推理阶段对这些次优部分进行修正以提高整体解质量。<br>
+具体来说，与在训练过程中生成部分解的过程相同，随机重建（RRC）从初始解中随机抽取一个部分解，并对其进行重新构建以获得新的部分解。当新的部分解更优时，替代旧的部分解。</p>
+<h2 id="实验">实验</h2>
+<p><strong>实验设备：</strong> Single NVIDIA GeForce RTX 3090 GPU with
+24GB memory。 <strong>实验设置：</strong> -
+训练集：TSP100、CVRP100各1,000,000实例。TSP训练集通过Concorde获取最优解。CVRP测试集通过HGS获取最优解。<br>
+测试集：TSP100-10, 000实例，TSP200/500/1000-128实例。CVRP设置同上。 -
+嵌入层维度128；解码器注意力层数6；多头注意力头数8；前馈层维度512。Adam初始学习率1e-4，每epoch衰减率0.97TSP/0.9CVRP。batch
+size 1024；TSP训150epochs/CVRP训40epochs。 -
+基线：经典求解器：Concorde、LKH3、HGS、OR-Tools；构造NCO：POMO、MDAM、EAS、SGBS、BQ；基于热图方法：Att-GCN+MCTS。</p>
+<div data-align="center">
+<figure>
+<img src="./Neural-Combinatorial-Optimization-with-Heavy-Decoder-Toward-Large-Scale-Generalization/Table 1.png" width="800">
+<figcaption>
+表1. 均匀分布TSP、CVRP实验结果。
+</figcaption>
+</figure>
+</div>
+<div data-align="center">
+<figure>
+<img src="./Neural-Combinatorial-Optimization-with-Heavy-Decoder-Toward-Large-Scale-Generalization/Table 2.png" width="800">
+<figcaption>
+表2. TSPLib、CVRPLib实验结果。
+</figcaption>
+</figure>
+</div>
+<h4 id="消融实验">消融实验</h4>
+<div data-align="center">
+<figure>
+<img src="./Neural-Combinatorial-Optimization-with-Heavy-Decoder-Toward-Large-Scale-Generalization/Table 3.png" width="500">
+<figcaption>
+表3. 相同监督学习方法下POMO与LEHD对比。
+</figcaption>
+</figure>
+</div>
+<div data-align="center">
+<figure>
+<img src="./Neural-Combinatorial-Optimization-with-Heavy-Decoder-Toward-Large-Scale-Generalization/Table 4.png" width="500">
+<figcaption>
+表4.
+强化学习与监督学习训练LEHD结果对比。TSP50/100-10K测试样例；TSP200/500/1000-128测试样例。
+</figcaption>
+</figure>
+</div>
+<div data-align="center">
+<figure>
+<img src="./Neural-Combinatorial-Optimization-with-Heavy-Decoder-Toward-Large-Scale-Generalization/Table 4.png" width="500">
+<figcaption>
+表5. 在POMO和LEHD上应用随机采样和随机重建方法对比。
+</figcaption>
+</figure>
+</div>
+<h2 id="结论">结论</h2>
+<ul>
+<li>提出LEHD，能够更好地泛化到大规模问题。</li>
+<li>制定了学习构建部分解的策略从而高效训练模型。</li>
+<li>利用随机重建机制在推理阶段在线提升解质量。</li>
+<li>是否存在有效的基于强化学习的训练范式对LEHD架构模型进行训练？</li>
+<li>探索更有效的部分解重建方式？</li>
+</ul>
+<h2 id="附录">附录</h2>
+<div data-align="center">
+<figure>
+<img src="./Neural-Combinatorial-Optimization-with-Heavy-Decoder-Toward-Large-Scale-Generalization/Table 8.png" width="500">
+<figcaption>
+表8. LEHD中归一化层的影响。
+</figcaption>
+</figure>
+</div>
+<h2 id="参考文献后续阅读">参考文献(后续阅读)</h2>
+<blockquote>
+<p>Xuanhao Pan, Yan Jin, Yuandong Ding, Mingxiao Feng, Li Zhao, Lei
+Song, and Jiang Bian. H-tsp: Hierarchically solving the large-scale
+traveling salesman problem. In AAAI 2023, February 2023. URL
+https://www.microsoft.com/en-us/research/publication/
+h-tsp-hierarchically-solving-the-large-scale-traveling-salesman-problem/.<br>
+Hanni Cheng, Haosi Zheng, Ya Cong, Weihao Jiang, and Shiliang Pu. Select
+and optimize: Learning to aolve large-scale tsp instances. In
+International Conference on Artificial Intelligence and Statistics,
+pages 1219–1231. PMLR, 2023.<br>
+Darko Drakulic, Sofia Michel, Florian Mai, Arnaud Sors, and Jean-Marc
+Andreoli. Bq-nco: Bisimulation quotienting for generalizable neural
+combinatorial optimization. arXiv preprint arXiv:2301.03313, 2023.<br>
+Shunyu Yao, Xi Lin, Zhenkun Wang, and Qingfu Zhang. Data-efficient
+supervised learning is powerful for neural combinatorial optimization.
+2023. URL https://openreview.net/forum?id=a_yFkJ4-uEK.</p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">YunFun</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2025/09/02/Neural-Combinatorial-Optimization-with-Heavy-Decoder-Toward-Large-Scale-Generalization/">http://example.com/2025/09/02/Neural-Combinatorial-Optimization-with-Heavy-Decoder-Toward-Large-Scale-Generalization/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">Xuyf</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/NIPS-2023/">NIPS 2023</a></div><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2025/08/29/BOPO-Neural-Combinatorial-Optimization-via-Best-anchored-and-Objective-guided-Preference-Optimization/" title="BOPO: Neural Combinatorial Optimization via  Best-anchored and Objective-guided Preference Optimization"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">BOPO: Neural Combinatorial Optimization via  Best-anchored and Objective-guided Preference Optimization</div></div><div class="info-2"><div class="info-item-1">     总结 摘要  以往基于RL的方法由于稀疏奖励和解决方案不足，存在着样本效率低下的问题。 本文提出了新的训练范式：Best-anchored and Objective-guided Preference Optimization (BOPO)——最佳锚定与目标引导的偏好优化，通过目标函数值利用解的偏好信息。包括：1）最佳锚定偏好对的构造方法，以更好地进行探索和利用；2）目标导向的成对损失函数，该函数能够利用目标函数值差异自适应地缩放梯度，摆脱了对奖励模型和参考策略的依赖。 BOPO方法在Job-shop Scheduling Problem (JSP), Traveling Salesman Problem (TSP), and Flexible Job-shop Scheduling Problem (FJSP)等问题上的实验结果验证了该方法的有效性，并且该方法是与架构无关的。  研究问题 方法 实验 结论 附录 参考文献(后续阅读)  奖励稀疏、样本效率低 Kim, H., Kim, M., Ahn, S., and ...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">YunFun</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">8</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%91%98%E8%A6%81"><span class="toc-number">2.</span> <span class="toc-text">摘要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A0%94%E7%A9%B6%E9%97%AE%E9%A2%98"><span class="toc-number">3.</span> <span class="toc-text">研究问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95"><span class="toc-number">4.</span> <span class="toc-text">方法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E6%9E%B6%E6%9E%84"><span class="toc-number">4.0.1.</span> <span class="toc-text">模型架构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83%E5%AD%A6%E4%B9%A0%E6%9E%84%E5%BB%BA%E9%83%A8%E5%88%86%E8%A7%A3"><span class="toc-number">4.0.2.</span> <span class="toc-text">训练：学习构建部分解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8E%A8%E7%90%86%E9%9A%8F%E6%9C%BA%E9%87%8D%E5%BB%BA"><span class="toc-number">4.0.3.</span> <span class="toc-text">推理：随机重建</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C"><span class="toc-number">5.</span> <span class="toc-text">实验</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B6%88%E8%9E%8D%E5%AE%9E%E9%AA%8C"><span class="toc-number">5.0.1.</span> <span class="toc-text">消融实验</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AE%BA"><span class="toc-number">6.</span> <span class="toc-text">结论</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%99%84%E5%BD%95"><span class="toc-number">7.</span> <span class="toc-text">附录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE%E5%90%8E%E7%BB%AD%E9%98%85%E8%AF%BB"><span class="toc-number">8.</span> <span class="toc-text">参考文献(后续阅读)</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/02/Neural-Combinatorial-Optimization-with-Heavy-Decoder-Toward-Large-Scale-Generalization/" title="Neural Combinatorial Optimization with Heavy Decoder: Toward Large Scale Generalization">Neural Combinatorial Optimization with Heavy Decoder: Toward Large Scale Generalization</a><time datetime="2025-09-02T07:32:28.000Z" title="发表于 2025-09-02 15:32:28">2025-09-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/08/29/BOPO-Neural-Combinatorial-Optimization-via-Best-anchored-and-Objective-guided-Preference-Optimization/" title="BOPO: Neural Combinatorial Optimization via  Best-anchored and Objective-guided Preference Optimization">BOPO: Neural Combinatorial Optimization via  Best-anchored and Objective-guided Preference Optimization</a><time datetime="2025-08-29T06:26:19.000Z" title="发表于 2025-08-29 14:26:19">2025-08-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/08/20/INViT-A-Generalizable-Routing-Problem-Solver-with-Invariant-Nested-View-Transformer/" title="INViT: A Generalizable Routing Problem Solver  with Invariant Nested View Transformer">INViT: A Generalizable Routing Problem Solver  with Invariant Nested View Transformer</a><time datetime="2025-08-20T09:32:46.000Z" title="发表于 2025-08-20 17:32:46">2025-08-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/08/02/Rethinking-Light-Decoder-based-Solvers-for-Vehicle-Routing-Problems/" title="Rethinking Light Decoder-based Solvers for Vehicle Routing Problems">Rethinking Light Decoder-based Solvers for Vehicle Routing Problems</a><time datetime="2025-08-02T10:05:39.000Z" title="发表于 2025-08-02 18:05:39">2025-08-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/07/29/ASP-Learn-a-Universal-Neural-Solver/" title="ASP: Learn a Universal Neural Solver!">ASP: Learn a Universal Neural Solver!</a><time datetime="2025-07-29T14:12:14.000Z" title="发表于 2025-07-29 22:12:14">2025-07-29</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;2025 By YunFun</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.4.2</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
