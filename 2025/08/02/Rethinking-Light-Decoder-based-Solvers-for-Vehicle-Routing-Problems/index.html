@@ -7,7 +7,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/img/butterfly-icon.png">
 <meta property="article:published_time" content="2025-08-02T10:05:39.000Z">
-<meta property="article:modified_time" content="2025-08-05T09:39:56.670Z">
+<meta property="article:modified_time" content="2025-09-17T05:21:31.386Z">
 <meta property="article:author" content="YunFun">
 <meta property="article:tag" content="ICLR 2025">
 <meta name="twitter:card" content="summary">
@@ -18,7 +18,7 @@
   "url": "http://example.com/2025/08/02/Rethinking-Light-Decoder-based-Solvers-for-Vehicle-Routing-Problems/",
   "image": "http://example.com/img/butterfly-icon.png",
   "datePublished": "2025-08-02T10:05:39.000Z",
-  "dateModified": "2025-08-05T09:39:56.670Z",
+  "dateModified": "2025-09-17T05:21:31.386Z",
   "author": [
     {
       "@type": "Person",
@@ -271,7 +271,7 @@ mjx-container[display="true"] {
 mjx-container[display="true"] + br {
   display: none;
 }
-</style></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Xuyf</span></a><a class="nav-page-title" href="/"><span class="site-name">Rethinking Light Decoder-based Solvers for Vehicle Routing Problems</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">Rethinking Light Decoder-based Solvers for Vehicle Routing Problems</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-08-02T10:05:39.000Z" title="发表于 2025-08-02 18:05:39">2025-08-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-08-05T09:39:56.670Z" title="更新于 2025-08-05 17:39:56">2025-08-05</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div data-align="center">
+</style></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Xuyf</span></a><a class="nav-page-title" href="/"><span class="site-name">Rethinking Light Decoder-based Solvers for Vehicle Routing Problems</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">Rethinking Light Decoder-based Solvers for Vehicle Routing Problems</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-08-02T10:05:39.000Z" title="发表于 2025-08-02 18:05:39">2025-08-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-09-17T05:21:31.386Z" title="更新于 2025-09-17 13:21:31">2025-09-17</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div data-align="center">
 <figure>
 <img src="./Rethinking-Light-Decoder-based-Solvers-for-Vehicle-Routing-Problems/Title.png" alt="VRP变体" width="650">
 </figure>
@@ -294,12 +294,18 @@ GPU 1080Ti）节省了残差连接、前馈网络。本文分析了这些组件�
 <h2 id="研究分析">研究分析</h2>
 <h3 id="轻型解码器范式的分析">轻型解码器范式的分析</h3>
 <blockquote>
-<p><strong>核心观点</strong> -
-编码器的核心任务本质上是要生成上下文无关的节点嵌入，面临的挑战是要覆盖原始实例中所有可能的子问题，且节点嵌入一次性生成不再更新，必须预封装全局信息，因此这些静态嵌入具有很高的信息密度。
-- 面对复杂问题，静态嵌入仍能有效解决多数子问题。 -
-轻量解码器无法高效利用高信息密度嵌入。 -
-提升解码器能力以提升求解器性能： - 有效地解释和调整静态嵌入到当前上下文
-- 抑制无关历史信息 - 强化与当前决策相关特征</p>
+<p><strong>核心观点</strong></p>
+<ul>
+<li>编码器的核心任务本质上是要生成上下文无关的节点嵌入，面临的挑战是要覆盖原始实例中所有可能的子问题，且节点嵌入一次性生成不再更新，必须预封装全局信息，因此这些静态嵌入具有很高的信息密度。</li>
+<li>面对复杂问题，静态嵌入仍能有效解决多数子问题。</li>
+<li>轻量解码器无法高效利用高信息密度嵌入。</li>
+<li>提升解码器能力以提升求解器性能：
+<ul>
+<li>有效地解释和调整静态嵌入到当前上下文</li>
+<li>抑制无关历史信息</li>
+<li>强化与当前决策相关特征</li>
+</ul></li>
+</ul>
 </blockquote>
 <h4 id="编码器任务过于沉重">编码器任务过于沉重</h4>
 <ul>
