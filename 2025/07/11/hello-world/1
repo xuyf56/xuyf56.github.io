@@ -1,0 +1,11 @@
+$content = Get-Content $args[0] -Raw
+$open = [regex]::Matches($content, '^:::(.+)?$', 'Multiline')
+$close = [regex]::Matches($content, '^:::\s*$', 'Multiline')
+if ($open.Count -ne $close.Count) {
+    Write-Host "发现 $($open.Count-$close.Count) 个未闭合 Div" -ForegroundColor Red
+    for ($i=0; $i -lt $open.Count; $i++) {
+        Write-Host "行号 $($open[$i].Index -split "`n").Count : $($open[$i].Value)"
+    }
+} else {
+    Write-Host "所有 Div 均已闭合" -ForegroundColor Green
+}
